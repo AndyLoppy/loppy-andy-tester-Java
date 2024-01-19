@@ -87,24 +87,24 @@ public class TicketDAO {
         return false;
     }
 
-    public boolean checkTicketExists(String vehicleRegNumber) {
+    public int getNbTicket(String vehicleRegNumber) {
+        int ticketCount = 0;
         Connection con = null;
-        boolean ticketExists = false;
         try {
             con = dataBaseConfig.getConnection();
-            PreparedStatement ps = con.prepareStatement(DBConstants.CHECK_TICKET_EXISTS);
+            PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET_COUNT);
             ps.setString(1, vehicleRegNumber);
             ResultSet rs = ps.executeQuery();
-            if (rs.next() && rs.getInt(1) > 0) {
-                ticketExists = true;
+            if (rs.next()) {
+                ticketCount = rs.getInt(1);
             }
             dataBaseConfig.closeResultSet(rs);
             dataBaseConfig.closePreparedStatement(ps);
         } catch (Exception ex) {
-            logger.error("Error checking ticket existence", ex);
+            logger.error("Error retrieving ticket count", ex);
         } finally {
             dataBaseConfig.closeConnection(con);
         }
-        return ticketExists;
+        return ticketCount;
     }
 }

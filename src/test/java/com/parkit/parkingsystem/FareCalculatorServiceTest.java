@@ -152,4 +152,37 @@ public class FareCalculatorServiceTest {
         assertEquals( 0 , ticket.getPrice());
     }
 
+    @Test
+    public void calculateFareCarWithDiscount() {
+        Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - ( 50 * 60 * 1000) );
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
+        double normalPrice = ticket.getPrice();
+        fareCalculatorService.calculateFare(ticket);
+        double discountPrice = ticket.getPrice();
+        assertEquals( normalPrice , (discountPrice * 1.05));
+    }
+
+    @Test
+    public void calculateFareBikeWithDiscount() {
+        Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - ( 50 * 60 * 1000) );
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.BIKE,false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
+        double normalPrice = ticket.getPrice();
+        fareCalculatorService.calculateFare(ticket);
+        double discountPrice = ticket.getPrice();
+        assertEquals( normalPrice , (discountPrice * 1.05));
+    }
 }
