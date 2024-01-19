@@ -164,9 +164,9 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
         double normalPrice = ticket.getPrice();
-        fareCalculatorService.calculateFare(ticket);
+        fareCalculatorService.calculateFare(ticket, true);
         double discountPrice = ticket.getPrice();
-        assertEquals( normalPrice , (discountPrice * 1.05));
+        assertEquals( (Math.round(normalPrice*0.95*100)/100.0) , discountPrice);
     }
 
     @Test
@@ -181,8 +181,8 @@ public class FareCalculatorServiceTest {
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
         double normalPrice = ticket.getPrice();
-        fareCalculatorService.calculateFare(ticket);
+        fareCalculatorService.calculateFare(ticket,true);
         double discountPrice = ticket.getPrice();
-        assertEquals( normalPrice , (discountPrice * 1.05));
+        assertEquals( (Math.round(normalPrice*0.95*100)/100.0) , discountPrice);
     }
 }
