@@ -86,4 +86,25 @@ public class TicketDAO {
         }
         return false;
     }
+
+    public boolean checkTicketExists(String vehicleRegNumber) {
+        Connection con = null;
+        boolean ticketExists = false;
+        try {
+            con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.CHECK_TICKET_EXISTS);
+            ps.setString(1, vehicleRegNumber);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                ticketExists = true;
+            }
+            dataBaseConfig.closeResultSet(rs);
+            dataBaseConfig.closePreparedStatement(ps);
+        } catch (Exception ex) {
+            logger.error("Error checking ticket existence", ex);
+        } finally {
+            dataBaseConfig.closeConnection(con);
+        }
+        return ticketExists;
+    }
 }
