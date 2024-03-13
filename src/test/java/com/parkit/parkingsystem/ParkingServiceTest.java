@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -91,28 +93,40 @@ public class ParkingServiceTest {
     @Test
     public void testGetNextParkingNumberIfAvailable() {
         // Arrange
-        ParkingSpotDAO parkingSpotDAO = mock(ParkingSpotDAO.class);
-        when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(1);
+        when(inputReaderUtil.readSelection()).thenReturn(1); // simulate user input 1 for vehicle type
+        when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1); // simulate available parking spot with ID 1
 
         // Act
-        int nextParkingNumber = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR);
+        ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
 
         // Assert
-        assertEquals(1, nextParkingNumber);
-        verify(parkingSpotDAO, times(1)).getNextAvailableSlot(ParkingType.CAR);
+        assertNotNull(parkingSpot); // verify that the method returns a valid parking spot
+        assertEquals(1, parkingSpot.getId()); // verify that the ID of the obtained parking spot is 1
     }
 
     @Test
     public void testGetNextParkingNumberIfAvailableParkingNumberNotFound() {
         // Arrange
-        ParkingSpotDAO parkingSpotDAO = mock(ParkingSpotDAO.class);
-        when(parkingSpotDAO.getNextAvailableSlot(any(ParkingType.class))).thenReturn(-1);
+        when(inputReaderUtil.readSelection()).thenReturn(1); // simulate user input 1 for vehicle type
+        when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(-1); // simulate no available parking spot
 
         // Act
-        int nextParkingNumber = parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR);
+        ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
 
         // Assert
-        assertEquals(-1, nextParkingNumber);
-        verify(parkingSpotDAO, times(1)).getNextAvailableSlot(ParkingType.CAR);
+        assertNull(parkingSpot); // verify that the method returns null when no parking spot is available
+    }
+
+    @Test
+    public void testGetNextParkingNumberIfAvailableParkingNumberWrongArgument() {
+
+        // Arrange
+        when(inputReaderUtil.readSelection()).thenReturn(3); // input 3, wrong
+
+        // Act
+        ParkingSpot parkingSpot = parkingService.getNextParkingNumberIfAvailable();
+
+        // Assert
+        assertNull(parkingSpot);
     }
 }
